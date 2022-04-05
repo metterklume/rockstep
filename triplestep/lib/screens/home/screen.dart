@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
+import 'package:multiple_stream_builder/multiple_stream_builder.dart';
+import 'package:tuple/tuple.dart';
 
 import 'package:my_app/app/app.locator.dart';
 
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:my_app/services/accelerometer_service.dart';
+import 'package:my_app/services/main_service.dart';
 import 'package:my_app/data/models/acclerometer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,10 +19,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  final _accelerometerService = locator<AccelerometerService>();
+  final _mainService = locator<MainService>();
 
   bool _isSelected = false;
+
   List<double>? _userAccelerometerValues;
+  List<double>? _gyroscopeValues;
   final _accValues = <Map<String, dynamic>>[];
 
   var uuid = Uuid();
@@ -34,13 +38,21 @@ class _HomeScreen extends State<HomeScreen> {
         ?.map((double v) => v.toStringAsFixed(1))
         .toList();
 
+    final userGyroscope =
+        _gyroscopeValues?.map((double v) => v.toStringAsFixed(1)).toList();
+
     return Scaffold(
-      body: StreamBuilder<dynamic>(
-          stream: userAccelerometerEvents,
-          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-            if (userAccelerometer != null) {
+      body: StreamBuilder2<UserAccelerometerEvent, GyroscopeEvent>(
+          streams: Tuple2(userAccelerometerEvents, gyroscopeEvents),
+          builder: (context,
+              Tuple2<AsyncSnapshot<UserAccelerometerEvent>,
+                      AsyncSnapshot<GyroscopeEvent>>
+                  snapshot) {
+            if (userAccelerometer != null && userGyroscope != null) {
               var d = Acclerometer(
-                  timestamp: DateTime.now(), accelo: userAccelerometer);
+                  timestamp: DateTime.now(),
+                  accelo: userAccelerometer,
+                  rotation: userGyroscope);
               _accValues.add(d.toJson());
             }
             return Center(
@@ -52,17 +64,18 @@ class _HomeScreen extends State<HomeScreen> {
                     width: 58,
                     child: SizedBox(),
                   ),
-                  Text('Accelerometer [x, y, z]: $userAccelerometer'),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Accelerometer [x, y, z]: $userAccelerometer'),
+                        Text('Gyroscope [x, y, z]: $userGyroscope'),
+                      ]),
                 ],
               )
             ]));
           }),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => {
-          setState(() {
-            toggelSelected(_accValues);
-          })
-        },
+        onPressed: () => toggelSelected(_accValues),
         backgroundColor: _isSelected ? Colors.green : Colors.black,
         icon: _isSelected
             ? const Icon(Icons.directions_run)
@@ -73,18 +86,21 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
 
-  void toggelSelected(data) {
+  void toggelSelected(data) async {
     if (_isSelected) {
-      _isSelected = false;
+      setState(() {
+        _isSelected = false;
+      });
+
       for (final subscription in _streamSubscriptions) {
         subscription.pause();
-        _uuid = uuid.v1();
+      }
+      _uuid = uuid.v1();
 
-        if (data != null) {
-          _accelerometerService.createLog(_uuid.toString(), true, data);
-        } else {
-          _accelerometerService.createLog(_uuid.toString(), false, {});
-        }
+      if (data != null) {
+        _mainService.addData(_uuid.toString(), true, data);
+      } else {
+        _mainService.addData(_uuid.toString(), false, {});
       }
     } else {
       _isSelected = true;
@@ -111,6 +127,15 @@ class _HomeScreen extends State<HomeScreen> {
         (UserAccelerometerEvent event) {
           setState(() {
             _userAccelerometerValues = <double>[event.x, event.y, event.z];
+          });
+        },
+      ),
+    );
+    _streamSubscriptions.add(
+      gyroscopeEvents.listen(
+        (GyroscopeEvent event) {
+          setState(() {
+            _gyroscopeValues = <double>[event.x, event.y, event.z];
           });
         },
       ),

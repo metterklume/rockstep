@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 
 import 'package:my_app/data/models/droplet.dart';
 
-class AccelerometerService extends SupabaseService<Droplet> {
+class MainService extends SupabaseService<Droplet> {
   final _logger = Logger();
 
   @override
@@ -13,17 +13,7 @@ class AccelerometerService extends SupabaseService<Droplet> {
     return "data";
   }
 
-  Future<PostgrestResponse> addData(
-      {required String id, required Droplet data}) async {
-    return await supabase
-        .from("data")
-        .insert(
-            Droplet(id: id, permission: data.permission, details: data.details)
-                .toJson())
-        .execute();
-  }
-
-  Future<void> createLog(id, _permission, _details) async {
+  Future<void> addData(id, _permission, _details) async {
     final response = await create(
       Droplet(id: id, permission: _permission, details: _details).toJson(),
     );

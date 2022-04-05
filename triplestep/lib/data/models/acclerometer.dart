@@ -8,6 +8,7 @@ class Acclerometer with _$Acclerometer {
   const factory Acclerometer({
     required DateTime timestamp,
     required List<String> accelo,
+    required List<String> rotation,
   }) = _Acclerometer;
 
   factory Acclerometer.fromJson(Map<String, dynamic> json) =>

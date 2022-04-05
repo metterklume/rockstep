@@ -1,7 +1,7 @@
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:my_app/screens/home/screen.dart';
-import 'package:my_app/services/accelerometer_service.dart';
+import 'package:my_app/services/main_service.dart';
 
 @StackedApp(
   logger: StackedLogger(),
@@ -13,7 +13,7 @@ import 'package:my_app/services/accelerometer_service.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: SnackbarService),
-    LazySingleton(classType: AccelerometerService),
+    LazySingleton(classType: MainService),
   ],
 )
 class AppSetup {}

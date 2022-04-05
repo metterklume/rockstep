@@ -23,10 +23,13 @@ class _$AcclerometerTearOff {
   const _$AcclerometerTearOff();
 
   _Acclerometer call(
-      {required DateTime timestamp, required List<String> accelo}) {
+      {required DateTime timestamp,
+      required List<String> accelo,
+      required List<String> rotation}) {
     return _Acclerometer(
       timestamp: timestamp,
       accelo: accelo,
+      rotation: rotation,
     );
   }
 
@@ -42,6 +45,7 @@ const $Acclerometer = _$AcclerometerTearOff();
 mixin _$Acclerometer {
   DateTime get timestamp => throw _privateConstructorUsedError;
   List<String> get accelo => throw _privateConstructorUsedError;
+  List<String> get rotation => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -54,7 +58,7 @@ abstract class $AcclerometerCopyWith<$Res> {
   factory $AcclerometerCopyWith(
           Acclerometer value, $Res Function(Acclerometer) then) =
       _$AcclerometerCopyWithImpl<$Res>;
-  $Res call({DateTime timestamp, List<String> accelo});
+  $Res call({DateTime timestamp, List<String> accelo, List<String> rotation});
 }
 
 /// @nodoc
@@ -69,6 +73,7 @@ class _$AcclerometerCopyWithImpl<$Res> implements $AcclerometerCopyWith<$Res> {
   $Res call({
     Object? timestamp = freezed,
     Object? accelo = freezed,
+    Object? rotation = freezed,
   }) {
     return _then(_value.copyWith(
       timestamp: timestamp == freezed
@@ -78,6 +83,10 @@ class _$AcclerometerCopyWithImpl<$Res> implements $AcclerometerCopyWith<$Res> {
       accelo: accelo == freezed
           ? _value.accelo
           : accelo // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      rotation: rotation == freezed
+          ? _value.rotation
+          : rotation // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
   }
@@ -90,7 +99,7 @@ abstract class _$AcclerometerCopyWith<$Res>
           _Acclerometer value, $Res Function(_Acclerometer) then) =
       __$AcclerometerCopyWithImpl<$Res>;
   @override
-  $Res call({DateTime timestamp, List<String> accelo});
+  $Res call({DateTime timestamp, List<String> accelo, List<String> rotation});
 }
 
 /// @nodoc
@@ -107,6 +116,7 @@ class __$AcclerometerCopyWithImpl<$Res> extends _$AcclerometerCopyWithImpl<$Res>
   $Res call({
     Object? timestamp = freezed,
     Object? accelo = freezed,
+    Object? rotation = freezed,
   }) {
     return _then(_Acclerometer(
       timestamp: timestamp == freezed
@@ -117,6 +127,10 @@ class __$AcclerometerCopyWithImpl<$Res> extends _$AcclerometerCopyWithImpl<$Res>
           ? _value.accelo
           : accelo // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      rotation: rotation == freezed
+          ? _value.rotation
+          : rotation // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -124,7 +138,8 @@ class __$AcclerometerCopyWithImpl<$Res> extends _$AcclerometerCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Acclerometer implements _Acclerometer {
-  const _$_Acclerometer({required this.timestamp, required this.accelo});
+  const _$_Acclerometer(
+      {required this.timestamp, required this.accelo, required this.rotation});
 
   factory _$_Acclerometer.fromJson(Map<String, dynamic> json) =>
       _$$_AcclerometerFromJson(json);
@@ -133,10 +148,12 @@ class _$_Acclerometer implements _Acclerometer {
   final DateTime timestamp;
   @override
   final List<String> accelo;
+  @override
+  final List<String> rotation;
 
   @override
   String toString() {
-    return 'Acclerometer(timestamp: $timestamp, accelo: $accelo)';
+    return 'Acclerometer(timestamp: $timestamp, accelo: $accelo, rotation: $rotation)';
   }
 
   @override
@@ -145,14 +162,16 @@ class _$_Acclerometer implements _Acclerometer {
         (other.runtimeType == runtimeType &&
             other is _Acclerometer &&
             const DeepCollectionEquality().equals(other.timestamp, timestamp) &&
-            const DeepCollectionEquality().equals(other.accelo, accelo));
+            const DeepCollectionEquality().equals(other.accelo, accelo) &&
+            const DeepCollectionEquality().equals(other.rotation, rotation));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(timestamp),
-      const DeepCollectionEquality().hash(accelo));
+      const DeepCollectionEquality().hash(accelo),
+      const DeepCollectionEquality().hash(rotation));
 
   @JsonKey(ignore: true)
   @override
@@ -168,7 +187,8 @@ class _$_Acclerometer implements _Acclerometer {
 abstract class _Acclerometer implements Acclerometer {
   const factory _Acclerometer(
       {required DateTime timestamp,
-      required List<String> accelo}) = _$_Acclerometer;
+      required List<String> accelo,
+      required List<String> rotation}) = _$_Acclerometer;
 
   factory _Acclerometer.fromJson(Map<String, dynamic> json) =
       _$_Acclerometer.fromJson;
@@ -177,6 +197,8 @@ abstract class _Acclerometer implements Acclerometer {
   DateTime get timestamp;
   @override
   List<String> get accelo;
+  @override
+  List<String> get rotation;
   @override
   @JsonKey(ignore: true)
   _$AcclerometerCopyWith<_Acclerometer> get copyWith =>
